@@ -1,0 +1,40 @@
+<svg viewBox="0 0 120 180" width="240" height="360" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="148" width="120" height="8" fill="#6db33f"/>
+<rect x="4" y="56" width="112" height="96" fill="#e8e0d8"/>
+<rect x="0" y="48" width="120" height="12" fill="#506080"/>
+<rect x="0" y="36" width="120" height="16" fill="#405070"/>
+<rect x="4" y="28" width="112" height="12" fill="#506080"/>
+<rect x="36" y="30" width="48" height="16" fill="#f0c030"/>
+<rect x="44" y="32" width="8" height="4" fill="#2a3050"/>
+<rect x="40" y="36" width="8" height="4" fill="#2a3050"/>
+<rect x="48" y="36" width="16" height="4" fill="#2a3050"/>
+<rect x="52" y="40" width="8" height="4" fill="#2a3050"/>
+<rect x="44" y="40" width="8" height="4" fill="#2a3050"/>
+<rect x="8" y="64" width="48" height="64" fill="#c8d8e8"/>
+<rect x="8" y="64" width="48" height="4" fill="#405070"/>
+<rect x="8" y="64" width="4" height="64" fill="#405070"/>
+<rect x="52" y="64" width="4" height="64" fill="#405070"/>
+<rect x="28" y="64" width="4" height="64" fill="#405070"/>
+<rect x="12" y="100" width="8" height="24" fill="#888"/>
+<rect x="10" y="100" width="12" height="4" fill="#666"/>
+<rect x="10" y="120" width="12" height="4" fill="#666"/>
+<rect x="22" y="108" width="20" height="8" fill="#c0a060"/>
+<rect x="20" y="104" width="4" height="16" fill="#c0a060"/>
+<rect x="38" y="104" width="4" height="16" fill="#c0a060"/>
+<rect x="16" y="76" width="8" height="8" fill="#a0b8c0"/>
+<rect x="28" y="76" width="8" height="8" fill="#a0b8c0"/>
+<rect x="40" y="76" width="8" height="8" fill="#a0b8c0"/>
+<rect x="64" y="72" width="48" height="56" fill="#c8d8e8"/>
+<rect x="64" y="72" width="48" height="4" fill="#405070"/>
+<rect x="64" y="72" width="4" height="56" fill="#405070"/>
+<rect x="108" y="72" width="4" height="56" fill="#405070"/>
+<rect x="48" y="120" width="24" height="32" fill="#7090b0"/>
+<rect x="48" y="120" width="24" height="4" fill="#405070"/>
+<rect x="58" y="132" width="4" height="4" fill="#c0d0e0"/>
+<rect x="68" y="96" width="36" height="12" fill="#607080"/>
+<rect x="68" y="104" width="36" height="8" fill="#506070"/>
+<rect x="76" y="88" width="4" height="12" fill="#8090a0"/>
+<rect x="88" y="88" width="4" height="12" fill="#8090a0"/>
+<rect x="72" y="80" width="24" height="12" fill="#a0b0c0"/>
+<text x="60" y="170" font-family="monospace" font-size="11" fill="#3a2a1a" font-weight="bold" text-anchor="middle">健 身 房</text>
+</svg>

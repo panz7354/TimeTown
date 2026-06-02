@@ -1,0 +1,39 @@
+<svg viewBox="0 0 120 180" width="240" height="360" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="148" width="120" height="8" fill="#6db33f"/>
+<rect x="8" y="64" width="104" height="88" fill="#fde8c0"/>
+<rect x="8" y="60" width="104" height="8" fill="#e05a10"/>
+<rect x="4" y="52" width="112" height="12" fill="#c04808"/>
+<rect x="12" y="44" width="96" height="12" fill="#c04808"/>
+<rect x="20" y="36" width="80" height="12" fill="#e05a10"/>
+<rect x="28" y="28" width="64" height="12" fill="#e05a10"/>
+<rect x="36" y="20" width="48" height="12" fill="#c04808"/>
+<rect x="44" y="12" width="32" height="12" fill="#c04808"/>
+<rect x="55" y="4" width="4" height="24" fill="#888"/>
+<rect x="59" y="4" width="16" height="10" fill="#e83030"/>
+<rect x="12" y="64" width="8" height="88" fill="#e8d0a0"/>
+<rect x="100" y="64" width="8" height="88" fill="#e8d0a0"/>
+<rect x="44" y="116" width="32" height="36" fill="#7a5a30"/>
+<rect x="44" y="116" width="16" height="36" fill="#8a6a40"/>
+<rect x="56" y="128" width="4" height="4" fill="#c8a050"/>
+<rect x="16" y="72" width="20" height="16" fill="#a0d0f0"/>
+<rect x="16" y="72" width="20" height="4" fill="#5090c0"/>
+<rect x="16" y="72" width="4" height="16" fill="#5090c0"/>
+<rect x="84" y="72" width="20" height="16" fill="#a0d0f0"/>
+<rect x="84" y="72" width="20" height="4" fill="#5090c0"/>
+<rect x="84" y="72" width="4" height="16" fill="#5090c0"/>
+<rect x="16" y="96" width="20" height="16" fill="#a0d0f0"/>
+<rect x="16" y="96" width="20" height="4" fill="#5090c0"/>
+<rect x="16" y="96" width="4" height="16" fill="#5090c0"/>
+<rect x="84" y="96" width="20" height="16" fill="#a0d0f0"/>
+<rect x="84" y="96" width="20" height="4" fill="#5090c0"/>
+<rect x="84" y="96" width="4" height="16" fill="#5090c0"/>
+<rect x="24" y="54" width="72" height="12" fill="#f5c060"/>
+<rect x="28" y="56" width="8" height="8" fill="#3a2010"/>
+<rect x="40" y="56" width="4" height="8" fill="#3a2010"/>
+<rect x="44" y="56" width="4" height="4" fill="#3a2010"/>
+<rect x="52" y="56" width="4" height="8" fill="#3a2010"/>
+<rect x="56" y="56" width="8" height="4" fill="#3a2010"/>
+<rect x="64" y="56" width="4" height="8" fill="#3a2010"/>
+<rect x="72" y="56" width="8" height="8" fill="#3a2010"/>
+<text x="60" y="170" font-family="monospace" font-size="11" fill="#3a2a1a" font-weight="bold" text-anchor="middle">學　　校</text>
+</svg>

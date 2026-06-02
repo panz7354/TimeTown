@@ -1,0 +1,41 @@
+<svg viewBox="0 0 120 180" width="240" height="360" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="148" width="120" height="8" fill="#6db33f"/>
+<rect x="4" y="64" width="112" height="88" fill="#f0f4f8"/>
+<rect x="0" y="56" width="120" height="12" fill="#2060c0"/>
+<rect x="0" y="44" width="120" height="16" fill="#1850a8"/>
+<rect x="4" y="36" width="112" height="12" fill="#2060c0"/>
+<rect x="0" y="56" width="120" height="4" fill="#e03030"/>
+<rect x="0" y="60" width="120" height="4" fill="#e0e030"/>
+<rect x="32" y="38" width="56" height="16" fill="#f0f0f0"/>
+<rect x="36" y="40" width="8" height="12" fill="#2060c0"/>
+<rect x="48" y="40" width="4" height="12" fill="#2060c0"/>
+<rect x="52" y="40" width="8" height="6" fill="#2060c0"/>
+<rect x="64" y="40" width="4" height="12" fill="#2060c0"/>
+<rect x="68" y="40" width="8" height="12" fill="#2060c0"/>
+<rect x="68" y="46" width="8" height="6" fill="#f0f0f0"/>
+<rect x="8" y="72" width="36" height="56" fill="#d0e8f8"/>
+<rect x="8" y="72" width="36" height="4" fill="#2060c0"/>
+<rect x="8" y="72" width="4" height="56" fill="#2060c0"/>
+<rect x="40" y="72" width="4" height="56" fill="#2060c0"/>
+<rect x="12" y="92" width="28" height="4" fill="#c8a870"/>
+<rect x="12" y="104" width="28" height="4" fill="#c8a870"/>
+<rect x="14" y="88" width="4" height="8" fill="#e06030"/>
+<rect x="20" y="88" width="4" height="8" fill="#30a050"/>
+<rect x="26" y="88" width="4" height="8" fill="#5050e0"/>
+<rect x="14" y="100" width="4" height="8" fill="#e09020"/>
+<rect x="20" y="100" width="4" height="8" fill="#c03050"/>
+<rect x="48" y="100" width="24" height="48" fill="#a0c0e0"/>
+<rect x="48" y="100" width="24" height="4" fill="#2060c0"/>
+<rect x="48" y="100" width="4" height="48" fill="#2060c0"/>
+<rect x="68" y="100" width="4" height="48" fill="#2060c0"/>
+<rect x="58" y="124" width="4" height="4" fill="#2060c0"/>
+<rect x="80" y="72" width="36" height="56" fill="#d0e8f8"/>
+<rect x="80" y="72" width="36" height="4" fill="#2060c0"/>
+<rect x="80" y="72" width="4" height="56" fill="#2060c0"/>
+<rect x="82" y="92" width="28" height="4" fill="#c8a870"/>
+<rect x="82" y="104" width="28" height="4" fill="#c8a870"/>
+<rect x="84" y="88" width="4" height="8" fill="#e05050"/>
+<rect x="90" y="88" width="4" height="8" fill="#50d050"/>
+<rect x="96" y="88" width="4" height="8" fill="#e0b020"/>
+<text x="60" y="170" font-family="monospace" font-size="11" fill="#3a2a1a" font-weight="bold" text-anchor="middle">便利商店</text>
+</svg>

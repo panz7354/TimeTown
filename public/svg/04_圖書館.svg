@@ -1,0 +1,31 @@
+<svg viewBox="0 0 120 180" width="240" height="360" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="148" width="120" height="8" fill="#6db33f"/>
+<rect x="4" y="72" width="112" height="80" fill="#e8dcc0"/>
+<rect x="44" y="20" width="32" height="52" fill="#d4c090"/>
+<rect x="40" y="36" width="40" height="8" fill="#d4c090"/>
+<rect x="36" y="44" width="48" height="8" fill="#d4c090"/>
+<rect x="32" y="52" width="56" height="8" fill="#d4c090"/>
+<rect x="28" y="60" width="64" height="8" fill="#c8aa70"/>
+<rect x="44" y="16" width="32" height="8" fill="#b89850"/>
+<rect x="48" y="8" width="24" height="12" fill="#b89850"/>
+<rect x="52" y="4" width="16" height="8" fill="#d4aa30"/>
+<rect x="56" y="0" width="8" height="8" fill="#f0c840"/>
+<rect x="12" y="72" width="8" height="80" fill="#d8c898"/>
+<rect x="28" y="72" width="8" height="80" fill="#d8c898"/>
+<rect x="84" y="72" width="8" height="80" fill="#d8c898"/>
+<rect x="100" y="72" width="8" height="80" fill="#d8c898"/>
+<rect x="4" y="68" width="112" height="8" fill="#c8a860"/>
+<rect x="48" y="116" width="24" height="36" fill="#6a4a20"/>
+<rect x="52" y="120" width="8" height="16" fill="#a07840"/>
+<rect x="60" y="120" width="8" height="16" fill="#a07840"/>
+<rect x="60" y="124" width="4" height="4" fill="#e0b060"/>
+<rect x="36" y="80" width="16" height="24" fill="#b8d8f0"/>
+<rect x="36" y="80" width="16" height="4" fill="#6090b8"/>
+<rect x="36" y="80" width="4" height="24" fill="#6090b8"/>
+<rect x="68" y="80" width="16" height="24" fill="#b8d8f0"/>
+<rect x="68" y="80" width="16" height="4" fill="#6090b8"/>
+<rect x="68" y="80" width="4" height="24" fill="#6090b8"/>
+<rect x="0" y="148" width="120" height="4" fill="#c8b888"/>
+<rect x="4" y="144" width="112" height="4" fill="#d8c898"/>
+<text x="60" y="170" font-family="monospace" font-size="11" fill="#3a2a1a" font-weight="bold" text-anchor="middle">圖 書 館</text>
+</svg>
