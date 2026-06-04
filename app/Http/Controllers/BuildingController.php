@@ -3,20 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Building;
-use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class BuildingController extends Controller
 {
-    // ──────────────────────────────────────────
-    // 建築升級對照表
-    // 結構：類型 => [ level => [建築名稱, svg檔名] ]
-    // level 0 = 基礎房子（任何類型設定任務時出現）
-    // level 1 = 完成 1 次
-    // level 2 = 完成 3 次
-    // level 3 = 完成 7 次
-    // ──────────────────────────────────────────
     const UPGRADE_MAP = [
         '學習' => [
             0 => ['基礎房子',   '01_基礎房子.svg'],
@@ -56,50 +47,17 @@ class BuildingController extends Controller
         ],
     ];
 
-    // 升級門檻：幾次完成 → 哪個 level
-    const LEVEL_THRESHOLDS = [
-        3 => 7,   // 7 次以上 → level 3
-        2 => 3,   // 3 次以上 → level 2
-        1 => 1,   // 1 次以上 → level 1
-        0 => 0,   // 0 次     → level 0
-    ];
-
-    // 每個類型建築預設放在地圖上的格子位置
-    const GRID_POSITIONS = [
-        '學習'   => ['x' => 1, 'y' => 1],
-        '工作'   => ['x' => 2, 'y' => 1],
-        '運動'   => ['x' => 3, 'y' => 1],
-        '社交'   => ['x' => 1, 'y' => 2],
-        '休息'   => ['x' => 2, 'y' => 2],
-        '興趣創作' => ['x' => 3, 'y' => 2],
-    ];
-
-    // ──────────────────────────────────────────
-    // 核心方法：任務完成後呼叫此方法更新建築
-    // 在 TaskController@complete 裡呼叫
-    // ──────────────────────────────────────────
+    // ── 任務完成後升級建築 ──────────────────────
     public static function upgradeAfterComplete(int $userId, string $taskType): Building
     {
-        // 找到或建立該類型的建築記錄
-        $building = Building::firstOrCreate(
-            ['user_id' => $userId, 'type' => $taskType],
-            [
-                'level'           => 0,
-                'name'            => '基礎房子',
-                'svg_file'        => '01_基礎房子.svg',
-                'completed_count' => 0,
-                'grid_x'          => self::GRID_POSITIONS[$taskType]['x'],
-                'grid_y'          => self::GRID_POSITIONS[$taskType]['y'],
-            ]
-        );
+        $building = Building::where('user_id', $userId)
+                            ->where('type', $taskType)
+                            ->firstOrFail();
 
-        // 完成次數 +1
         $building->completed_count += 1;
 
-        // 計算新 level
         $newLevel = self::calculateLevel($building->completed_count);
 
-        // 有升級才更新名稱與圖示
         if ($newLevel !== $building->level) {
             $building->level    = $newLevel;
             $building->name     = self::UPGRADE_MAP[$taskType][$newLevel][0];
@@ -111,28 +69,71 @@ class BuildingController extends Controller
         return $building;
     }
 
-    // ──────────────────────────────────────────
-    // 新增任務時呼叫：確保基礎房子已存在
-    // 在 TaskController@store 裡呼叫
-    // ──────────────────────────────────────────
-    public static function ensureBaseBuilding(int $userId, string $taskType): void
+    // ── 新增任務時建立建築（grid 為 null，等待使用者選位置）──
+    public static function ensureBaseBuilding(int $userId, string $taskType): Building
     {
-        Building::firstOrCreate(
+        return Building::firstOrCreate(
             ['user_id' => $userId, 'type' => $taskType],
             [
                 'level'           => 0,
                 'name'            => '基礎房子',
                 'svg_file'        => '01_基礎房子.svg',
                 'completed_count' => 0,
-                'grid_x'          => self::GRID_POSITIONS[$taskType]['x'],
-                'grid_y'          => self::GRID_POSITIONS[$taskType]['y'],
+                'grid_x'          => null,  // 等使用者選位置
+                'grid_y'          => null,
             ]
         );
     }
 
-    // ──────────────────────────────────────────
-    // 計算 level（私有輔助方法）
-    // ──────────────────────────────────────────
+    // ── 使用者選好格子後存入位置 ────────────────
+    public function placeBuilding(Request $request, int $buildingId): \Illuminate\Http\JsonResponse
+    {
+        $request->validate([
+            'grid_x' => 'required|integer|min:0|max:7',
+            'grid_y' => 'required|integer|min:0|max:7',
+        ]);
+
+        $building = Building::where('id', $buildingId)
+                            ->where('user_id', Auth::id())
+                            ->firstOrFail();
+
+        // 位置一旦設定就不能再改
+        if ($building->grid_x !== null) {
+            return response()->json(['error' => '此建築已有位置，無法再移動。'], 422);
+        }
+
+        // 檢查同一個 user 的同一格是否已被佔用
+        $occupied = Building::where('user_id', Auth::id())
+                            ->where('grid_x', $request->grid_x)
+                            ->where('grid_y', $request->grid_y)
+                            ->exists();
+
+        if ($occupied) {
+            return response()->json(['error' => '這個格子已有建築了！'], 422);
+        }
+
+        $building->update([
+            'grid_x' => $request->grid_x,
+            'grid_y' => $request->grid_y,
+        ]);
+
+        return response()->json(['success' => true, 'building' => $building]);
+    }
+
+    // ── 城鎮地圖頁 ───────────────────────────────
+    public function index()
+    {
+        $buildings = Building::where('user_id', Auth::id())
+                             ->orderBy('grid_y')
+                             ->orderBy('grid_x')
+                             ->get();
+
+        // 尚未選位置的建築（需要提示使用者去選）
+        $unplaced = $buildings->whereNull('grid_x');
+
+        return view('town.index', compact('buildings', 'unplaced'));
+    }
+
     private static function calculateLevel(int $count): int
     {
         return match(true) {
@@ -141,18 +142,5 @@ class BuildingController extends Controller
             $count >= 1 => 1,
             default     => 0,
         };
-    }
-
-    // ──────────────────────────────────────────
-    // 取得目前登入者所有建築（給城鎮地圖頁用）
-    // ──────────────────────────────────────────
-    public function index()
-    {
-        $buildings = Building::where('user_id', Auth::id())
-                             ->orderBy('grid_y')
-                             ->orderBy('grid_x')
-                             ->get();
-
-        return view('town.index', compact('buildings'));
     }
 }
