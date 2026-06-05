@@ -1,14 +1,20 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TownController;
-use App\Http\Controllers\TaskController;
-use App\Http\Controllers\BuildingController;
 
-Route::get('/', [TownController::class, 'index']);
-Route::get('/calendar', [TaskController::class, 'index']);
-Route::post('/tasks', [TaskController::class, 'store']);
-Route::patch('/tasks/{id}/complete', [TaskController::class, 'complete']);
+Route::get('/', function () {
+    return view('welcome');
+});
 
-// 使用者選擇建築格子位置（只能設定一次）
-Route::patch('/buildings/{id}/place', [BuildingController::class, 'placeBuilding']);
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';
