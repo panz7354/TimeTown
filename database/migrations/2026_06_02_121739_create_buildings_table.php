@@ -11,14 +11,17 @@ return new class extends Migration
         Schema::create('buildings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->enum('type', ['學習', '工作', '運動', '社交', '休息', '興趣創作']);
-            $table->unsignedTinyInteger('level') ->default(0);
+            $table->enum('type', ['學習','工作','運動','社交','休息','興趣創作']);
+            $table->unsignedTinyInteger('slot')->default(0);
+            $table->unsignedTinyInteger('level')->default(0);
             $table->string('name', 30)->default('基礎房子');
             $table->string('svg_file', 50)->default('01_基礎房子.svg');
             $table->unsignedSmallInteger('completed_count')->default(0);
-            $table->unsignedTinyInteger('grid_x');
-            $table->unsignedTinyInteger('grid_y');
+            $table->unsignedTinyInteger('grid_x')->nullable();
+            $table->unsignedTinyInteger('grid_y')->nullable();
             $table->timestamps();
+
+            $table->unique(['user_id', 'type', 'slot']);
         });
     }
 

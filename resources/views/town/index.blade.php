@@ -52,7 +52,7 @@ body{background:#F5EDD6;font-family:'Noto Serif TC',serif;min-height:100vh;overf
 }
 .viewport.dragging{cursor:grabbing;}
 .viewport.placing-mode{cursor:crosshair;}
-.world{position:absolute;width:1080px;height:820px;top:0;left:0;will-change:transform;}
+.world{position:absolute;width:1800px;height:1200px;top:0;left:0;will-change:transform;}
 .terrain-svg{position:absolute;inset:0;pointer-events:none;}
 .objects-layer{position:absolute;inset:0;}
 
@@ -60,8 +60,8 @@ body{background:#F5EDD6;font-family:'Noto Serif TC',serif;min-height:100vh;overf
 .grid-overlay{
     position:absolute;inset:0;
     display:grid;
-    grid-template-columns:repeat(8,135px);
-    grid-template-rows:repeat(8,102.5px);
+    grid-template-columns:repeat(8,225px);
+    grid-template-rows:repeat(8,150px);
     pointer-events:none;opacity:0;transition:opacity 0.2s;
     z-index:20;
 }
@@ -194,108 +194,114 @@ body{background:#F5EDD6;font-family:'Noto Serif TC',serif;min-height:100vh;overf
   <div class="world" id="world">
 
     {{-- ══ 地形 SVG ══ --}}
-    <svg class="terrain-svg" viewBox="0 0 1080 820" width="1080" height="820" xmlns="http://www.w3.org/2000/svg">
-      <rect width="1080" height="820" fill="#8BAF66"/>
-      <rect x="0" y="0" width="340" height="280" fill="#82A85E" opacity="0.6"/>
-      <rect x="700" y="500" width="380" height="320" fill="#7FA05A" opacity="0.5"/>
-      <rect x="0" y="550" width="300" height="270" fill="#85AB62" opacity="0.4"/>
-      <rect x="450" y="0" width="260" height="200" fill="#93B86E" opacity="0.4"/>
-      <!-- 道路 -->
-      <rect x="0" y="350" width="1080" height="40" fill="#D2BD85"/>
-      <rect x="0" y="368" width="1080" height="4" fill="rgba(255,248,200,0.28)"/>
-      <rect x="370" y="0" width="40" height="820" fill="#D2BD85"/>
-      <rect x="388" y="0" width="4" height="820" fill="rgba(255,248,200,0.28)"/>
-      <rect x="740" y="0" width="36" height="820" fill="#CDB87E"/>
-      <rect x="757" y="0" width="3" height="820" fill="rgba(255,248,200,0.22)"/>
-      <rect x="0" y="162" width="740" height="32" fill="#CDB87E"/>
-      <rect x="0" y="177" width="740" height="3" fill="rgba(255,248,200,0.22)"/>
-      <rect x="370" y="582" width="710" height="32" fill="#CDB87E"/>
-      <rect x="370" y="597" width="710" height="3" fill="rgba(255,248,200,0.22)"/>
-      <!-- 路口廣場 -->
-      <rect x="370" y="350" width="40" height="40" fill="#C8B472"/>
-      <rect x="740" y="350" width="36" height="40" fill="#C8B472"/>
-      <rect x="370" y="162" width="40" height="32" fill="#C8B472"/>
-      <rect x="740" y="162" width="36" height="32" fill="#C8B472"/>
-      <rect x="370" y="582" width="40" height="32" fill="#C8B472"/>
-      <rect x="740" y="582" width="36" height="32" fill="#C8B472"/>
-      <!-- 河流：右側垂直向下 L 形 -->
-      <rect x="855" y="0" width="52" height="600" fill="#6AAEC8"/>
-      <rect x="855" y="560" width="225" height="52" fill="#6AAEC8"/>
-      <rect x="848" y="0" width="8" height="600" fill="#5EA0B8" opacity="0.45"/>
-      <rect x="905" y="0" width="8" height="600" fill="#5EA0B8" opacity="0.4"/>
-      <rect x="855" y="553" width="225" height="8" fill="#5EA0B8" opacity="0.45"/>
-      <rect x="855" y="610" width="225" height="8" fill="#5EA0B8" opacity="0.4"/>
-      <ellipse cx="881" cy="80"  rx="12" ry="4" fill="white" opacity="0.15"/>
-      <ellipse cx="881" cy="200" rx="16" ry="5" fill="white" opacity="0.12"/>
-      <ellipse cx="881" cy="340" rx="10" ry="3" fill="white" opacity="0.13"/>
-      <ellipse cx="881" cy="470" rx="14" ry="4" fill="white" opacity="0.11"/>
-      <ellipse cx="960" cy="586" rx="14" ry="4" fill="white" opacity="0.13"/>
-      <ellipse cx="1040" cy="586" rx="10" ry="3" fill="white" opacity="0.11"/>
-      <!-- 橋（y=350 橫向） -->
-      <rect x="855" y="350" width="52" height="40" fill="#C8A96A"/>
-      <rect x="857" y="352" width="4" height="36" fill="rgba(180,140,60,0.5)"/>
-      <rect x="901" y="352" width="4" height="36" fill="rgba(180,140,60,0.5)"/>
-      <rect x="855" y="350" width="52" height="4" fill="#B89050" opacity="0.7"/>
-      <rect x="855" y="386" width="52" height="4" fill="#B89050" opacity="0.7"/>
-      <!-- 橋（y=582 橫向） -->
-      <rect x="855" y="582" width="52" height="32" fill="#C8A96A"/>
-      <rect x="855" y="582" width="52" height="3" fill="#B89050" opacity="0.7"/>
-      <rect x="855" y="611" width="52" height="3" fill="#B89050" opacity="0.7"/>
-      <!-- 公園區（左上） -->
-      <rect x="20" y="20" width="330" height="118" fill="#6A9E4E" rx="14"/>
-      <ellipse cx="180" cy="75" rx="52" ry="28" fill="#7ABCD8" opacity="0.7"/>
-      <ellipse cx="180" cy="75" rx="38" ry="18" fill="#8ECFE8" opacity="0.5"/>
-      <path d="M80 138 Q130 75 180 75 Q230 75 280 138" stroke="#D2BD85" stroke-width="5" fill="none" opacity="0.45"/>
-      <!-- 小廣場（中） -->
-      <rect x="420" y="198" width="140" height="140" fill="#C8B472" rx="8" opacity="0.5"/>
-      <circle cx="490" cy="268" r="20" fill="#B89A50" opacity="0.35"/>
-      <circle cx="490" cy="268" r="10" fill="#D4AA5A" opacity="0.45"/>
-      <!-- 圍欄 -->
-      <g stroke="#A07840" stroke-width="2" opacity="0.55">
-        <line x1="20" y1="140" x2="350" y2="140"/>
-        <line x1="30"  y1="138" x2="30"  y2="145"/><line x1="60"  y1="138" x2="60"  y2="145"/>
-        <line x1="90"  y1="138" x2="90"  y2="145"/><line x1="120" y1="138" x2="120" y2="145"/>
-        <line x1="150" y1="138" x2="150" y2="145"/><line x1="180" y1="138" x2="180" y2="145"/>
-        <line x1="210" y1="138" x2="210" y2="145"/><line x1="240" y1="138" x2="240" y2="145"/>
-        <line x1="270" y1="138" x2="270" y2="145"/><line x1="300" y1="138" x2="300" y2="145"/>
-        <line x1="330" y1="138" x2="330" y2="145"/>
-      </g>
-      <!-- 石板小徑 -->
-      <rect x="420" y="230" width="8" height="118" fill="#C8B070" rx="2" opacity="0.45"/>
-      <rect x="150" y="198" width="8" height="152" fill="#C8B070" rx="2" opacity="0.38"/>
-      <rect x="580" y="198" width="8" height="152" fill="#C8B070" rx="2" opacity="0.38"/>
-      <!-- 樹木群 -->
-      <g transform="translate(58,28)"><ellipse cx="14" cy="22" rx="13" ry="11" fill="#4A8038"/><ellipse cx="14" cy="27" rx="15" ry="10" fill="#5A9048"/><ellipse cx="14" cy="31" rx="12" ry="8" fill="#68A056"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
-      <g transform="translate(98,22)"><ellipse cx="14" cy="22" rx="12" ry="10" fill="#4A8038"/><ellipse cx="14" cy="27" rx="14" ry="9" fill="#5A9048"/><ellipse cx="14" cy="31" rx="11" ry="7" fill="#68A056"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
-      <g transform="translate(58,76)"><ellipse cx="14" cy="22" rx="13" ry="11" fill="#508840"/><ellipse cx="14" cy="27" rx="15" ry="10" fill="#609858"/><ellipse cx="14" cy="31" rx="12" ry="8" fill="#6EA864"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
-      <g transform="translate(278,28)"><ellipse cx="14" cy="22" rx="12" ry="10" fill="#4A8038"/><ellipse cx="14" cy="27" rx="14" ry="9" fill="#5A9048"/><ellipse cx="14" cy="31" rx="11" ry="7" fill="#68A056"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
-      <g transform="translate(308,58)"><ellipse cx="14" cy="22" rx="13" ry="11" fill="#508840"/><ellipse cx="14" cy="27" rx="15" ry="10" fill="#609850"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
-      <g transform="translate(18,418)"><ellipse cx="14" cy="22" rx="13" ry="11" fill="#4A8038"/><ellipse cx="14" cy="27" rx="15" ry="10" fill="#5A9048"/><ellipse cx="14" cy="31" rx="12" ry="8" fill="#68A056"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
-      <g transform="translate(58,458)"><ellipse cx="14" cy="22" rx="12" ry="10" fill="#508840"/><ellipse cx="14" cy="27" rx="14" ry="9" fill="#609850"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
-      <g transform="translate(18,508)"><ellipse cx="14" cy="22" rx="11" ry="9" fill="#4A8038"/><ellipse cx="14" cy="27" rx="13" ry="8" fill="#5A9048"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
-      <g transform="translate(98,398)"><ellipse cx="14" cy="22" rx="13" ry="11" fill="#508840"/><ellipse cx="14" cy="27" rx="15" ry="10" fill="#609850"/><ellipse cx="14" cy="31" rx="12" ry="8" fill="#6EA860"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
-      <g transform="translate(798,28)"><ellipse cx="14" cy="22" rx="13" ry="11" fill="#4A8038"/><ellipse cx="14" cy="27" rx="15" ry="10" fill="#5A9048"/><ellipse cx="14" cy="31" rx="12" ry="8" fill="#68A056"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
-      <g transform="translate(818,68)"><ellipse cx="14" cy="22" rx="12" ry="10" fill="#508840"/><ellipse cx="14" cy="27" rx="14" ry="9" fill="#609850"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
-      <g transform="translate(798,198)"><ellipse cx="14" cy="22" rx="13" ry="11" fill="#4A8038"/><ellipse cx="14" cy="27" rx="15" ry="10" fill="#5A9048"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
-      <g transform="translate(808,268)"><ellipse cx="14" cy="22" rx="11" ry="9" fill="#508840"/><ellipse cx="14" cy="27" rx="13" ry="8" fill="#609850"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
-      <g transform="translate(928,618)"><ellipse cx="14" cy="22" rx="13" ry="11" fill="#4A8038"/><ellipse cx="14" cy="27" rx="15" ry="10" fill="#5A9048"/><ellipse cx="14" cy="31" rx="12" ry="8" fill="#68A056"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
-      <g transform="translate(978,648)"><ellipse cx="14" cy="22" rx="12" ry="10" fill="#508840"/><ellipse cx="14" cy="27" rx="14" ry="9" fill="#609850"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
-      <g transform="translate(1018,618)"><ellipse cx="14" cy="22" rx="13" ry="11" fill="#4A8038"/><ellipse cx="14" cy="27" rx="15" ry="10" fill="#5A9048"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
-      <g transform="translate(158,238)"><ellipse cx="14" cy="22" rx="12" ry="10" fill="#508840"/><ellipse cx="14" cy="27" rx="14" ry="9" fill="#609850"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
-      <g transform="translate(218,398)"><ellipse cx="14" cy="22" rx="11" ry="9" fill="#4A8038"/><ellipse cx="14" cy="27" rx="13" ry="8" fill="#5A9048"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
-      <g transform="translate(538,418)"><ellipse cx="14" cy="22" rx="12" ry="10" fill="#508840"/><ellipse cx="14" cy="27" rx="14" ry="9" fill="#609850"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
-      <g transform="translate(598,458)"><ellipse cx="14" cy="22" rx="11" ry="9" fill="#4A8038"/><ellipse cx="14" cy="27" rx="13" ry="8" fill="#5A9048"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
-      <g transform="translate(198,658)"><ellipse cx="14" cy="22" rx="13" ry="11" fill="#508840"/><ellipse cx="14" cy="27" rx="15" ry="10" fill="#609850"/><ellipse cx="14" cy="31" rx="12" ry="8" fill="#6EA860"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
-      <g transform="translate(548,698)"><ellipse cx="14" cy="22" rx="12" ry="10" fill="#4A8038"/><ellipse cx="14" cy="27" rx="14" ry="9" fill="#5A9048"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
-      <g transform="translate(618,728)"><ellipse cx="14" cy="22" rx="11" ry="9" fill="#508840"/><ellipse cx="14" cy="27" rx="13" ry="8" fill="#609850"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
-      <!-- 花朵 -->
-      <g transform="translate(138,143)"><circle cx="7" cy="7" r="3" fill="#F4D48E"/><ellipse cx="7" cy="2" rx="2" ry="3" fill="#F4D48E" opacity="0.7"/><ellipse cx="7" cy="12" rx="2" ry="3" fill="#F4D48E" opacity="0.7"/><ellipse cx="2" cy="7" rx="3" ry="2" fill="#F4D48E" opacity="0.7"/><ellipse cx="12" cy="7" rx="3" ry="2" fill="#F4D48E" opacity="0.7"/></g>
-      <g transform="translate(308,143)"><circle cx="7" cy="7" r="3" fill="#F4D48E"/><ellipse cx="7" cy="2" rx="2" ry="3" fill="#F4D48E" opacity="0.7"/><ellipse cx="7" cy="12" rx="2" ry="3" fill="#F4D48E" opacity="0.7"/><ellipse cx="2" cy="7" rx="3" ry="2" fill="#F4D48E" opacity="0.7"/><ellipse cx="12" cy="7" rx="3" ry="2" fill="#F4D48E" opacity="0.7"/></g>
-      <g transform="translate(168,448)"><circle cx="7" cy="7" r="3" fill="#EFB0A4"/><ellipse cx="7" cy="2" rx="2" ry="3" fill="#EFB0A4" opacity="0.7"/><ellipse cx="7" cy="12" rx="2" ry="3" fill="#EFB0A4" opacity="0.7"/><ellipse cx="2" cy="7" rx="3" ry="2" fill="#EFB0A4" opacity="0.7"/><ellipse cx="12" cy="7" rx="3" ry="2" fill="#EFB0A4" opacity="0.7"/></g>
-      <g transform="translate(78,538)"><circle cx="7" cy="7" r="3" fill="#EFB0A4"/><ellipse cx="7" cy="2" rx="2" ry="3" fill="#EFB0A4" opacity="0.7"/><ellipse cx="7" cy="12" rx="2" ry="3" fill="#EFB0A4" opacity="0.7"/><ellipse cx="2" cy="7" rx="3" ry="2" fill="#EFB0A4" opacity="0.7"/><ellipse cx="12" cy="7" rx="3" ry="2" fill="#EFB0A4" opacity="0.7"/></g>
-      <g transform="translate(558,378)"><circle cx="7" cy="7" r="3" fill="#C18ACF"/><ellipse cx="7" cy="2" rx="2" ry="3" fill="#C18ACF" opacity="0.7"/><ellipse cx="7" cy="12" rx="2" ry="3" fill="#C18ACF" opacity="0.7"/><ellipse cx="2" cy="7" rx="3" ry="2" fill="#C18ACF" opacity="0.7"/><ellipse cx="12" cy="7" rx="3" ry="2" fill="#C18ACF" opacity="0.7"/></g>
-      <g transform="translate(668,658)"><circle cx="7" cy="7" r="3" fill="#C18ACF"/><ellipse cx="7" cy="2" rx="2" ry="3" fill="#C18ACF" opacity="0.7"/><ellipse cx="7" cy="12" rx="2" ry="3" fill="#C18ACF" opacity="0.7"/><ellipse cx="2" cy="7" rx="3" ry="2" fill="#C18ACF" opacity="0.7"/><ellipse cx="12" cy="7" rx="3" ry="2" fill="#C18ACF" opacity="0.7"/></g>
-      <g transform="translate(798,408)"><circle cx="7" cy="7" r="3" fill="#F4D48E"/><ellipse cx="7" cy="2" rx="2" ry="3" fill="#F4D48E" opacity="0.7"/><ellipse cx="7" cy="12" rx="2" ry="3" fill="#F4D48E" opacity="0.7"/><ellipse cx="2" cy="7" rx="3" ry="2" fill="#F4D48E" opacity="0.7"/><ellipse cx="12" cy="7" rx="3" ry="2" fill="#F4D48E" opacity="0.7"/></g>
+    <svg class="terrain-svg" viewBox="0 0 1800 1200" width="1800" height="1200" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1800" height="1200" fill="#8BAF66"/>
+    <!-- 色塊區域 -->
+    <rect x="0" y="0" width="567" height="410" fill="#82A85E" opacity="0.6"/>
+    <rect x="1167" y="731" width="633" height="469" fill="#7FA05A" opacity="0.5"/>
+    <rect x="0" y="805" width="500" height="395" fill="#85AB62" opacity="0.4"/>
+    <rect x="750" y="0" width="433" height="293" fill="#93B86E" opacity="0.4"/>
+    <!-- 道路 橫向主幹 -->
+    <rect x="0" y="512" width="1800" height="58" fill="#D2BD85"/>
+    <rect x="0" y="538" width="1800" height="6" fill="rgba(255,248,200,0.28)"/>
+    <!-- 道路 縱向主幹 -->
+    <rect x="617" y="0" width="58" height="1200" fill="#D2BD85"/>
+    <rect x="645" y="0" width="6" height="1200" fill="rgba(255,248,200,0.28)"/>
+    <!-- 道路 縱向次幹 -->
+    <rect x="1233" y="0" width="53" height="1200" fill="#CDB87E"/>
+    <rect x="1261" y="0" width="5" height="1200" fill="rgba(255,248,200,0.22)"/>
+    <!-- 道路 橫向次幹上 -->
+    <rect x="0" y="237" width="1233" height="47" fill="#CDB87E"/>
+    <rect x="0" y="259" width="1233" height="5" fill="rgba(255,248,200,0.22)"/>
+    <!-- 道路 橫向次幹下 -->
+    <rect x="617" y="851" width="1183" height="47" fill="#CDB87E"/>
+    <rect x="617" y="873" width="1183" height="5" fill="rgba(255,248,200,0.22)"/>
+    <!-- 路口廣場 -->
+    <rect x="617" y="512" width="58" height="58" fill="#C8B472"/>
+    <rect x="1233" y="512" width="53" height="58" fill="#C8B472"/>
+    <rect x="617" y="237" width="58" height="47" fill="#C8B472"/>
+    <rect x="1233" y="237" width="53" height="47" fill="#C8B472"/>
+    <rect x="617" y="851" width="58" height="47" fill="#C8B472"/>
+    <rect x="1233" y="851" width="53" height="47" fill="#C8B472"/>
+    <!-- 河流 L 形 -->
+    <rect x="1425" y="0" width="87" height="878" fill="#6AAEC8"/>
+    <rect x="1425" y="819" width="375" height="76" fill="#6AAEC8"/>
+    <rect x="1412" y="0" width="13" height="878" fill="#5EA0B8" opacity="0.45"/>
+    <rect x="1508" y="0" width="13" height="878" fill="#5EA0B8" opacity="0.4"/>
+    <rect x="1425" y="808" width="375" height="12" fill="#5EA0B8" opacity="0.45"/>
+    <rect x="1425" y="893" width="375" height="12" fill="#5EA0B8" opacity="0.4"/>
+    <!-- 河流波光 -->
+    <ellipse cx="1469" cy="117" rx="20" ry="6" fill="white" opacity="0.15"/>
+    <ellipse cx="1469" cy="293" rx="27" ry="7" fill="white" opacity="0.12"/>
+    <ellipse cx="1469" cy="497" rx="17" ry="4" fill="white" opacity="0.13"/>
+    <ellipse cx="1469" cy="688" rx="23" ry="6" fill="white" opacity="0.11"/>
+    <ellipse cx="1600" cy="857" rx="23" ry="6" fill="white" opacity="0.13"/>
+    <ellipse cx="1733" cy="857" rx="17" ry="4" fill="white" opacity="0.11"/>
+    <!-- 橋 橫向主幹 -->
+    <rect x="1425" y="512" width="87" height="58" fill="#C8A96A"/>
+    <rect x="1428" y="515" width="7" height="52" fill="rgba(180,140,60,0.5)"/>
+    <rect x="1501" y="515" width="7" height="52" fill="rgba(180,140,60,0.5)"/>
+    <rect x="1425" y="512" width="87" height="6" fill="#B89050" opacity="0.7"/>
+    <rect x="1425" y="564" width="87" height="6" fill="#B89050" opacity="0.7"/>
+    <!-- 橋 橫向次幹下 -->
+    <rect x="1425" y="851" width="87" height="47" fill="#C8A96A"/>
+    <rect x="1425" y="851" width="87" height="5" fill="#B89050" opacity="0.7"/>
+    <rect x="1425" y="893" width="87" height="5" fill="#B89050" opacity="0.7"/>
+    <!-- 公園區 左上 -->
+    <rect x="33" y="29" width="550" height="173" fill="#6A9E4E" rx="20"/>
+    <ellipse cx="300" cy="110" rx="87" ry="41" fill="#7ABCD8" opacity="0.7"/>
+    <ellipse cx="300" cy="110" rx="63" ry="26" fill="#8ECFE8" opacity="0.5"/>
+    <path d="M133 202 Q216 110 300 110 Q383 110 467 202" stroke="#D2BD85" stroke-width="7" fill="none" opacity="0.45"/>
+    <!-- 小廣場 中 -->
+    <rect x="700" y="290" width="233" height="205" fill="#C8B472" rx="12" opacity="0.5"/>
+    <circle cx="817" cy="392" r="33" fill="#B89A50" opacity="0.35"/>
+    <circle cx="817" cy="392" r="17" fill="#D4AA5A" opacity="0.45"/>
+    <!-- 圍欄 -->
+    <g stroke="#A07840" stroke-width="3" opacity="0.55">
+        <line x1="33" y1="205" x2="583" y2="205"/>
+        <line x1="50"  y1="202" x2="50"  y2="212"/><line x1="100" y1="202" x2="100" y2="212"/>
+        <line x1="150" y1="202" x2="150" y2="212"/><line x1="200" y1="202" x2="200" y2="212"/>
+        <line x1="250" y1="202" x2="250" y2="212"/><line x1="300" y1="202" x2="300" y2="212"/>
+        <line x1="350" y1="202" x2="350" y2="212"/><line x1="400" y1="202" x2="400" y2="212"/>
+        <line x1="450" y1="202" x2="450" y2="212"/><line x1="500" y1="202" x2="500" y2="212"/>
+        <line x1="550" y1="202" x2="550" y2="212"/>
+    </g>
+    <!-- 石板小徑 -->
+    <rect x="700" y="337" width="13" height="173" fill="#C8B070" rx="3" opacity="0.45"/>
+    <rect x="250" y="290" width="13" height="222" fill="#C8B070" rx="3" opacity="0.38"/>
+    <rect x="967" y="290" width="13" height="222" fill="#C8B070" rx="3" opacity="0.38"/>
+    <!-- 樹木群 -->
+    <g transform="translate(97,41) scale(1.667,1.463)"><ellipse cx="14" cy="22" rx="13" ry="11" fill="#4A8038"/><ellipse cx="14" cy="27" rx="15" ry="10" fill="#5A9048"/><ellipse cx="14" cy="31" rx="12" ry="8" fill="#68A056"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
+    <g transform="translate(163,32) scale(1.667,1.463)"><ellipse cx="14" cy="22" rx="12" ry="10" fill="#4A8038"/><ellipse cx="14" cy="27" rx="14" ry="9" fill="#5A9048"/><ellipse cx="14" cy="31" rx="11" ry="7" fill="#68A056"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
+    <g transform="translate(97,111) scale(1.667,1.463)"><ellipse cx="14" cy="22" rx="13" ry="11" fill="#508840"/><ellipse cx="14" cy="27" rx="15" ry="10" fill="#609858"/><ellipse cx="14" cy="31" rx="12" ry="8" fill="#6EA864"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
+    <g transform="translate(463,41) scale(1.667,1.463)"><ellipse cx="14" cy="22" rx="12" ry="10" fill="#4A8038"/><ellipse cx="14" cy="27" rx="14" ry="9" fill="#5A9048"/><ellipse cx="14" cy="31" rx="11" ry="7" fill="#68A056"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
+    <g transform="translate(513,85) scale(1.667,1.463)"><ellipse cx="14" cy="22" rx="13" ry="11" fill="#508840"/><ellipse cx="14" cy="27" rx="15" ry="10" fill="#609850"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
+    <g transform="translate(30,611) scale(1.667,1.463)"><ellipse cx="14" cy="22" rx="13" ry="11" fill="#4A8038"/><ellipse cx="14" cy="27" rx="15" ry="10" fill="#5A9048"/><ellipse cx="14" cy="31" rx="12" ry="8" fill="#68A056"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
+    <g transform="translate(97,670) scale(1.667,1.463)"><ellipse cx="14" cy="22" rx="12" ry="10" fill="#508840"/><ellipse cx="14" cy="27" rx="14" ry="9" fill="#609850"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
+    <g transform="translate(30,743) scale(1.667,1.463)"><ellipse cx="14" cy="22" rx="11" ry="9" fill="#4A8038"/><ellipse cx="14" cy="27" rx="13" ry="8" fill="#5A9048"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
+    <g transform="translate(163,582) scale(1.667,1.463)"><ellipse cx="14" cy="22" rx="13" ry="11" fill="#508840"/><ellipse cx="14" cy="27" rx="15" ry="10" fill="#609850"/><ellipse cx="14" cy="31" rx="12" ry="8" fill="#6EA860"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
+    <g transform="translate(1330,41) scale(1.667,1.463)"><ellipse cx="14" cy="22" rx="13" ry="11" fill="#4A8038"/><ellipse cx="14" cy="27" rx="15" ry="10" fill="#5A9048"/><ellipse cx="14" cy="31" rx="12" ry="8" fill="#68A056"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
+    <g transform="translate(1363,99) scale(1.667,1.463)"><ellipse cx="14" cy="22" rx="12" ry="10" fill="#508840"/><ellipse cx="14" cy="27" rx="14" ry="9" fill="#609850"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
+    <g transform="translate(1330,290) scale(1.667,1.463)"><ellipse cx="14" cy="22" rx="13" ry="11" fill="#4A8038"/><ellipse cx="14" cy="27" rx="15" ry="10" fill="#5A9048"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
+    <g transform="translate(1347,392) scale(1.667,1.463)"><ellipse cx="14" cy="22" rx="11" ry="9" fill="#508840"/><ellipse cx="14" cy="27" rx="13" ry="8" fill="#609850"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
+    <g transform="translate(1547,904) scale(1.667,1.463)"><ellipse cx="14" cy="22" rx="13" ry="11" fill="#4A8038"/><ellipse cx="14" cy="27" rx="15" ry="10" fill="#5A9048"/><ellipse cx="14" cy="31" rx="12" ry="8" fill="#68A056"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
+    <g transform="translate(1630,948) scale(1.667,1.463)"><ellipse cx="14" cy="22" rx="12" ry="10" fill="#508840"/><ellipse cx="14" cy="27" rx="14" ry="9" fill="#609850"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
+    <g transform="translate(1697,904) scale(1.667,1.463)"><ellipse cx="14" cy="22" rx="13" ry="11" fill="#4A8038"/><ellipse cx="14" cy="27" rx="15" ry="10" fill="#5A9048"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
+    <g transform="translate(263,348) scale(1.667,1.463)"><ellipse cx="14" cy="22" rx="12" ry="10" fill="#508840"/><ellipse cx="14" cy="27" rx="14" ry="9" fill="#609850"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
+    <g transform="translate(363,582) scale(1.667,1.463)"><ellipse cx="14" cy="22" rx="11" ry="9" fill="#4A8038"/><ellipse cx="14" cy="27" rx="13" ry="8" fill="#5A9048"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
+    <g transform="translate(897,611) scale(1.667,1.463)"><ellipse cx="14" cy="22" rx="12" ry="10" fill="#508840"/><ellipse cx="14" cy="27" rx="14" ry="9" fill="#609850"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
+    <g transform="translate(997,670) scale(1.667,1.463)"><ellipse cx="14" cy="22" rx="11" ry="9" fill="#4A8038"/><ellipse cx="14" cy="27" rx="13" ry="8" fill="#5A9048"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
+    <g transform="translate(330,963) scale(1.667,1.463)"><ellipse cx="14" cy="22" rx="13" ry="11" fill="#508840"/><ellipse cx="14" cy="27" rx="15" ry="10" fill="#609850"/><ellipse cx="14" cy="31" rx="12" ry="8" fill="#6EA860"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
+    <g transform="translate(913,1021) scale(1.667,1.463)"><ellipse cx="14" cy="22" rx="12" ry="10" fill="#4A8038"/><ellipse cx="14" cy="27" rx="14" ry="9" fill="#5A9048"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
+    <g transform="translate(1030,1065) scale(1.667,1.463)"><ellipse cx="14" cy="22" rx="11" ry="9" fill="#508840"/><ellipse cx="14" cy="27" rx="13" ry="8" fill="#609850"/><rect x="11" y="37" width="6" height="10" rx="2" fill="#7A5A28" opacity="0.8"/></g>
+    <!-- 花朵 -->
+    <g transform="translate(230,209)"><circle cx="7" cy="7" r="4" fill="#F4D48E"/><ellipse cx="7" cy="2" rx="3" ry="4" fill="#F4D48E" opacity="0.7"/><ellipse cx="7" cy="12" rx="3" ry="4" fill="#F4D48E" opacity="0.7"/><ellipse cx="2" cy="7" rx="4" ry="3" fill="#F4D48E" opacity="0.7"/><ellipse cx="12" cy="7" rx="4" ry="3" fill="#F4D48E" opacity="0.7"/></g>
+    <g transform="translate(513,209)"><circle cx="7" cy="7" r="4" fill="#F4D48E"/><ellipse cx="7" cy="2" rx="3" ry="4" fill="#F4D48E" opacity="0.7"/><ellipse cx="7" cy="12" rx="3" ry="4" fill="#F4D48E" opacity="0.7"/><ellipse cx="2" cy="7" rx="4" ry="3" fill="#F4D48E" opacity="0.7"/><ellipse cx="12" cy="7" rx="4" ry="3" fill="#F4D48E" opacity="0.7"/></g>
+    <g transform="translate(280,655)"><circle cx="7" cy="7" r="4" fill="#EFB0A4"/><ellipse cx="7" cy="2" rx="3" ry="4" fill="#EFB0A4" opacity="0.7"/><ellipse cx="7" cy="12" rx="3" ry="4" fill="#EFB0A4" opacity="0.7"/><ellipse cx="2" cy="7" rx="4" ry="3" fill="#EFB0A4" opacity="0.7"/><ellipse cx="12" cy="7" rx="4" ry="3" fill="#EFB0A4" opacity="0.7"/></g>
+    <g transform="translate(130,787)"><circle cx="7" cy="7" r="4" fill="#EFB0A4"/><ellipse cx="7" cy="2" rx="3" ry="4" fill="#EFB0A4" opacity="0.7"/><ellipse cx="7" cy="12" rx="3" ry="4" fill="#EFB0A4" opacity="0.7"/><ellipse cx="2" cy="7" rx="4" ry="3" fill="#EFB0A4" opacity="0.7"/><ellipse cx="12" cy="7" rx="4" ry="3" fill="#EFB0A4" opacity="0.7"/></g>
+    <g transform="translate(930,553)"><circle cx="7" cy="7" r="4" fill="#C18ACF"/><ellipse cx="7" cy="2" rx="3" ry="4" fill="#C18ACF" opacity="0.7"/><ellipse cx="7" cy="12" rx="3" ry="4" fill="#C18ACF" opacity="0.7"/><ellipse cx="2" cy="7" rx="4" ry="3" fill="#C18ACF" opacity="0.7"/><ellipse cx="12" cy="7" rx="4" ry="3" fill="#C18ACF" opacity="0.7"/></g>
+    <g transform="translate(1113,963)"><circle cx="7" cy="7" r="4" fill="#C18ACF"/><ellipse cx="7" cy="2" rx="3" ry="4" fill="#C18ACF" opacity="0.7"/><ellipse cx="7" cy="12" rx="3" ry="4" fill="#C18ACF" opacity="0.7"/><ellipse cx="2" cy="7" rx="4" ry="3" fill="#C18ACF" opacity="0.7"/><ellipse cx="12" cy="7" rx="4" ry="3" fill="#C18ACF" opacity="0.7"/></g>
+    <g transform="translate(1330,597)"><circle cx="7" cy="7" r="4" fill="#F4D48E"/><ellipse cx="7" cy="2" rx="3" ry="4" fill="#F4D48E" opacity="0.7"/><ellipse cx="7" cy="12" rx="3" ry="4" fill="#F4D48E" opacity="0.7"/><ellipse cx="2" cy="7" rx="4" ry="3" fill="#F4D48E" opacity="0.7"/><ellipse cx="12" cy="7" rx="4" ry="3" fill="#F4D48E" opacity="0.7"/></g>
     </svg>
 
     {{-- ══ 物件層 ══ --}}
@@ -323,8 +329,8 @@ body{background:#F5EDD6;font-family:'Noto Serif TC',serif;min-height:100vh;overf
       {{-- 已放置的建築 --}}
       @foreach($buildings->whereNotNull('grid_x') as $b)
         @php
-          $px = $b->grid_x * 135 + 22;
-          $py = $b->grid_y * 102.5 + 6;
+          $px = $b->grid_x * 225 + 35;
+          $py = $b->grid_y * 150 + 10;
           $upgradeMap = \App\Http\Controllers\BuildingController::UPGRADE_MAP;
           $levels     = $upgradeMap[$b->type];
           $nextLevel  = $b->level + 1;
@@ -409,7 +415,7 @@ body{background:#F5EDD6;font-family:'Noto Serif TC',serif;min-height:100vh;overf
 const vp    = document.getElementById('vp');
 const world = document.getElementById('world');
 let ox=0, oy=0, sx=0, sy=0, drag=false, rafPending=false;
-const WW=1080, WH=820;
+const WW=1800, WH=1200;
 
 function clamp(v,mn,mx){ return Math.max(mn,Math.min(mx,v)); }
 
@@ -425,8 +431,8 @@ vp.addEventListener('mousedown', e => {
 });
 window.addEventListener('mousemove', e => {
     if(!drag) return;
-    ox = clamp(e.clientX-sx, -(WW - vp.offsetWidth),  0);
-    oy = clamp(e.clientY-sy, -(WH - vp.offsetHeight), 0);
+    ox = clamp(e.clientX-sx, Math.min(0, -(WW - window.innerWidth)), 0);
+    oy = clamp(e.clientY-sy, Math.min(0, -(WH - window.innerHeight)), 0);
     if(!rafPending){ rafPending=true; requestAnimationFrame(applyTransform); }
 });
 window.addEventListener('mouseup', () => { drag=false; vp.classList.remove('dragging'); });
@@ -437,8 +443,8 @@ vp.addEventListener('touchstart', e => {
     tSy=e.touches[0].clientY-oy;
 }, {passive:true});
 vp.addEventListener('touchmove', e => {
-    ox = clamp(e.touches[0].clientX-tSx, -(WW - vp.offsetWidth),  0);
-    oy = clamp(e.touches[0].clientY-tSy, -(WH - vp.offsetHeight), 0);
+    ox = clamp(e.touches[0].clientX-tSx, Math.min(0, -(WW - window.innerWidth)), 0);
+    oy = clamp(e.touches[0].clientY-tSy, Math.min(0, -(WH - window.innerHeight)), 0);
     if(!rafPending){ rafPending=true; requestAnimationFrame(applyTransform); }
 }, {passive:true});
 
