@@ -3,18 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
-use App\Http\Controllers\BuildingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 class TaskController extends Controller
 {
-    // 行事曆頁
+    // 行事曆頁面
     public function index()
     {
         $tasks = Task::where('user_id', Auth::id())
-                     ->orderBy('date', 'desc')
+                     ->orderBy('date')
                      ->get();
 
         return view('calendar.index', compact('tasks'));
@@ -42,6 +41,7 @@ class TaskController extends Controller
             'year'    => $date->year,
         ]);
 
+        // 確保基礎房子存在
         BuildingController::ensureBaseBuilding(Auth::id(), $request->type);
 
         return redirect()->back()->with('success', '任務已新增！');

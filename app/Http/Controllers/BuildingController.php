@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Building;
+use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -47,15 +48,32 @@ class BuildingController extends Controller
         ],
     ];
 
-    // ── 任務完成後升級建築 ──────────────────────
+    const LEVEL_THRESHOLDS = [3 => 7, 2 => 3, 1 => 1, 0 => 0];
+
+    const GRID_POSITIONS = [
+        '學習'     => ['x' => 1, 'y' => 1],
+        '工作'     => ['x' => 2, 'y' => 1],
+        '運動'     => ['x' => 3, 'y' => 1],
+        '社交'     => ['x' => 1, 'y' => 2],
+        '休息'     => ['x' => 2, 'y' => 2],
+        '興趣創作' => ['x' => 3, 'y' => 2],
+    ];
+
     public static function upgradeAfterComplete(int $userId, string $taskType): Building
     {
-        $building = Building::where('user_id', $userId)
-                            ->where('type', $taskType)
-                            ->firstOrFail();
+        $building = Building::firstOrCreate(
+            ['user_id' => $userId, 'type' => $taskType],
+            [
+                'level'           => 0,
+                'name'            => '基礎房子',
+                'svg_file'        => '01_基礎房子.svg',
+                'completed_count' => 0,
+                'grid_x'          => self::GRID_POSITIONS[$taskType]['x'],
+                'grid_y'          => self::GRID_POSITIONS[$taskType]['y'],
+            ]
+        );
 
         $building->completed_count += 1;
-
         $newLevel = self::calculateLevel($building->completed_count);
 
         if ($newLevel !== $building->level) {
@@ -65,73 +83,22 @@ class BuildingController extends Controller
         }
 
         $building->save();
-
         return $building;
     }
 
-    // ── 新增任務時建立建築（grid 為 null，等待使用者選位置）──
-    public static function ensureBaseBuilding(int $userId, string $taskType): Building
+    public static function ensureBaseBuilding(int $userId, string $taskType): void
     {
-        return Building::firstOrCreate(
+        Building::firstOrCreate(
             ['user_id' => $userId, 'type' => $taskType],
             [
                 'level'           => 0,
                 'name'            => '基礎房子',
                 'svg_file'        => '01_基礎房子.svg',
                 'completed_count' => 0,
-                'grid_x'          => null,  // 等使用者選位置
-                'grid_y'          => null,
+                'grid_x'          => self::GRID_POSITIONS[$taskType]['x'],
+                'grid_y'          => self::GRID_POSITIONS[$taskType]['y'],
             ]
         );
-    }
-
-    // ── 使用者選好格子後存入位置 ────────────────
-    public function placeBuilding(Request $request, int $buildingId): \Illuminate\Http\JsonResponse
-    {
-        $request->validate([
-            'grid_x' => 'required|integer|min:0|max:7',
-            'grid_y' => 'required|integer|min:0|max:7',
-        ]);
-
-        $building = Building::where('id', $buildingId)
-                            ->where('user_id', Auth::id())
-                            ->firstOrFail();
-
-        // 位置一旦設定就不能再改
-        if ($building->grid_x !== null) {
-            return response()->json(['error' => '此建築已有位置，無法再移動。'], 422);
-        }
-
-        // 檢查同一個 user 的同一格是否已被佔用
-        $occupied = Building::where('user_id', Auth::id())
-                            ->where('grid_x', $request->grid_x)
-                            ->where('grid_y', $request->grid_y)
-                            ->exists();
-
-        if ($occupied) {
-            return response()->json(['error' => '這個格子已有建築了！'], 422);
-        }
-
-        $building->update([
-            'grid_x' => $request->grid_x,
-            'grid_y' => $request->grid_y,
-        ]);
-
-        return response()->json(['success' => true, 'building' => $building]);
-    }
-
-    // ── 城鎮地圖頁 ───────────────────────────────
-    public function index()
-    {
-        $buildings = Building::where('user_id', Auth::id())
-                             ->orderBy('grid_y')
-                             ->orderBy('grid_x')
-                             ->get();
-
-        // 尚未選位置的建築（需要提示使用者去選）
-        $unplaced = $buildings->whereNull('grid_x');
-
-        return view('town.index', compact('buildings', 'unplaced'));
     }
 
     private static function calculateLevel(int $count): int
@@ -142,5 +109,31 @@ class BuildingController extends Controller
             $count >= 1 => 1,
             default     => 0,
         };
+    }
+
+    public function index()
+    {
+        $buildings = Building::where('user_id', Auth::id())
+                             ->orderBy('grid_y')
+                             ->orderBy('grid_x')
+                             ->get();
+
+        $unplaced = $buildings->filter(fn($b) => is_null($b->grid_x));
+
+        return view('town.index', compact('buildings', 'unplaced'));
+    }
+
+    public function place(Request $request, int $id)
+    {
+        $building = Building::where('id', $id)
+                            ->where('user_id', Auth::id())
+                            ->firstOrFail();
+
+        $building->update([
+            'grid_x' => $request->grid_x,
+            'grid_y' => $request->grid_y,
+        ]);
+
+        return response()->json(['success' => true]);
     }
 }

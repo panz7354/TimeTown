@@ -405,31 +405,41 @@ body{background:#F5EDD6;font-family:'Noto Serif TC',serif;min-height:100vh;overf
   }
 })();
 
-// ── 拖曳 ──────────────────────────────────────
+// ── 拖曳（加 requestAnimationFrame 防卡頓）──
 const vp    = document.getElementById('vp');
 const world = document.getElementById('world');
-let ox=0, oy=0, sx=0, sy=0, drag=false;
+let ox=0, oy=0, sx=0, sy=0, drag=false, rafPending=false;
 const WW=1080, WH=820;
 
 function clamp(v,mn,mx){ return Math.max(mn,Math.min(mx,v)); }
 
+function applyTransform(){
+    world.style.transform = `translate(${ox}px,${oy}px)`;
+    rafPending = false;
+}
+
 vp.addEventListener('mousedown', e => {
-  if(e.target.closest('.panel') || e.target.closest('.grid-cell.available')) return;
-  drag=true; sx=e.clientX-ox; sy=e.clientY-oy;
-  vp.classList.add('dragging');
+    if(e.target.closest('.panel') || e.target.closest('.grid-cell.available')) return;
+    drag=true; sx=e.clientX-ox; sy=e.clientY-oy;
+    vp.classList.add('dragging');
 });
 window.addEventListener('mousemove', e => {
-  if(!drag) return;
-  ox = clamp(e.clientX-sx, -(WW - vp.offsetWidth),  0);
-  oy = clamp(e.clientY-sy, -(WH - vp.offsetHeight), 0);
-  world.style.transform = `translate(${ox}px,${oy}px)`;
+    if(!drag) return;
+    ox = clamp(e.clientX-sx, -(WW - vp.offsetWidth),  0);
+    oy = clamp(e.clientY-sy, -(WH - vp.offsetHeight), 0);
+    if(!rafPending){ rafPending=true; requestAnimationFrame(applyTransform); }
 });
 window.addEventListener('mouseup', () => { drag=false; vp.classList.remove('dragging'); });
-vp.addEventListener('touchstart', e => { sx=e.touches[0].clientX-ox; sy=e.touches[0].clientY-oy; }, {passive:true});
-vp.addEventListener('touchmove',  e => {
-  ox = clamp(e.touches[0].clientX-sx, -(WW - vp.offsetWidth),  0);
-  oy = clamp(e.touches[0].clientY-sy, -(WH - vp.offsetHeight), 0);
-  world.style.transform = `translate(${ox}px,${oy}px)`;
+
+let tSx=0, tSy=0;
+vp.addEventListener('touchstart', e => {
+    tSx=e.touches[0].clientX-ox;
+    tSy=e.touches[0].clientY-oy;
+}, {passive:true});
+vp.addEventListener('touchmove', e => {
+    ox = clamp(e.touches[0].clientX-tSx, -(WW - vp.offsetWidth),  0);
+    oy = clamp(e.touches[0].clientY-tSy, -(WH - vp.offsetHeight), 0);
+    if(!rafPending){ rafPending=true; requestAnimationFrame(applyTransform); }
 }, {passive:true});
 
 // ── 選位模式 ─────────────────────────────────
