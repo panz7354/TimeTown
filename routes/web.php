@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BuildingController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\StoryController;
 
 // 登入/註冊（不需要驗證）
 Route::get('/login',    [AuthController::class, 'showLogin'])->name('login');
@@ -19,4 +21,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/tasks',                   [TaskController::class, 'store']);
     Route::patch('/tasks/{id}/complete',    [TaskController::class, 'complete']);
     Route::patch('/buildings/{id}/place',   [BuildingController::class, 'place']);
+    Route::get('/review',  [ReviewController::class, 'index']);
+    Route::get('/stories', [StoryController::class,  'index']);
 });
