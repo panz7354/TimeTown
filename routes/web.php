@@ -22,5 +22,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/tasks/{id}/complete',    [TaskController::class, 'complete']);
     Route::patch('/buildings/{id}/place',   [BuildingController::class, 'place']);
     Route::get('/review',  [ReviewController::class, 'index']);
-    Route::get('/stories', [StoryController::class,  'index']);
+    Route::get('/stories',          [StoryController::class, 'index'])->name('stories.index');
+    Route::post('/stories/generate',[StoryController::class, 'generate'])->name('stories.generate');
 });
