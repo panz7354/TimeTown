@@ -246,7 +246,6 @@
         .snapshot-map {
             position: relative;
             width: 100%;
-            padding-top: 55%;
             background: #8BAF66;
             border-radius: 10px;
             overflow: hidden;
@@ -449,24 +448,36 @@
                         <div>還沒有放置任何建築</div>
                     </div>
                 @else
-                    <div class="snapshot-map">
-                        <div class="snapshot-inner">
-                            {{-- 簡易地形背景 --}}
-                            <svg width="100%" height="100%" viewBox="0 0 1684 1056" preserveAspectRatio="xMidYMid slice"
-                                style="position:absolute;inset:0;">
-                                <rect width="1684" height="1056" fill="#8BAF66" />
-                                {{-- 橫向道路 row=2後,row=6後 --}}
-                                <rect x="0" y="228" width="1684" height="28" fill="#D2BD85" />
-                                <rect x="0" y="628" width="1684" height="28" fill="#D2BD85" />
-                                {{-- 縱向道路 col=3後,col=8後,col=13後 --}}
-                                <rect x="328" y="0" width="28" height="1056" fill="#D2BD85" />
-                                <rect x="828" y="0" width="28" height="1056" fill="#D2BD85" />
-                                <rect x="1328" y="0" width="28" height="1056" fill="#D2BD85" />
-                                {{-- 河流 col=14-15 --}}
-                                <rect x="1384" y="0" width="300" height="1056" fill="#6AAEC8" />
-                            </svg>
-                            {{-- 建築點 --}}
-                            @foreach($snapshot as $b)
+                    <div class="snapshot-map" style="position:relative;width:100%;background:#8BAF66;border-radius:10px;overflow:hidden;">
+                        {{-- 用 padding-top 維持地圖原始比例 1684:1056 ≈ 62.7% --}}
+                        <div style="padding-top:62.7%;position:relative;">
+                            <div style="position:absolute;inset:0;">
+                                {{-- 底圖 SVG --}}
+                                <svg width="100%" height="100%" viewBox="0 0 1684 1056" preserveAspectRatio="xMinYMin meet"
+                                    style="position:absolute;inset:0;">
+                                    <rect width="1684" height="1056" fill="#8BAF66" />
+                                    {{-- 橫向道路 row=2後(y=228), row=6後(y=628) --}}
+                                    <rect x="0" y="228" width="1684" height="28" fill="#D2BD85" />
+                                    <rect x="0" y="628" width="1684" height="28" fill="#D2BD85" />
+                                    {{-- 縱向道路 col=3後(x=328), col=8後(x=828), col=13後(x=1328) --}}
+                                    <rect x="328" y="0" width="28" height="1056" fill="#D2BD85" />
+                                    <rect x="828" y="0" width="28" height="1056" fill="#D2BD85" />
+                                    <rect x="1328" y="0" width="28" height="1056" fill="#D2BD85" />
+                                    {{-- 路口 --}}
+                                    <rect x="328" y="228" width="28" height="28" fill="#C8B472" />
+                                    <rect x="828" y="228" width="28" height="28" fill="#C8B472" />
+                                    <rect x="1328" y="228" width="28" height="28" fill="#C8B472" />
+                                    <rect x="328" y="628" width="28" height="28" fill="#C8B472" />
+                                    <rect x="828" y="628" width="28" height="28" fill="#C8B472" />
+                                    <rect x="1328" y="628" width="28" height="28" fill="#C8B472" />
+                                    {{-- 河流 col=14-15(x=1384起) --}}
+                                    <rect x="1384" y="0" width="300" height="1056" fill="#6AAEC8" />
+                                    {{-- 公園 col=0-2, row=0-1 --}}
+                                    <rect x="0" y="0" width="328" height="228" fill="#6A9E4E" rx="4" />
+                                    <ellipse cx="164" cy="114" rx="70" ry="45" fill="#7ABCD8" opacity="0.7" />
+                                    <ellipse cx="164" cy="114" rx="48" ry="30" fill="#8ECFE8" opacity="0.5" />
+                                </svg>
+                                {{-- 建築 --}}
                                 @php
                                     $roadCols = [3, 8, 13];
                                     $roadRows = [2, 6];
@@ -475,38 +486,44 @@
                                     $mapW     = $cellSz * 16 + $roadW * 3;  // 1684
                                     $mapH     = $cellSz * 10 + $roadW * 2;  // 1056
                                 @endphp
-
                                 @foreach($snapshot as $b)
-                                    @php
-                                        // 計算 col 像素
-                                        $bx = 0;
-                                        for($i = 0; $i < $b->grid_x; $i++){
-                                            $bx += $cellSz;
-                                            if(in_array($i, $roadCols)) $bx += $roadW;
-                                        }
-                                        $bx += $cellSz / 2;
+                                @php
+                                    $bx = 0;
+                                    for($i = 0; $i < $b->grid_x; $i++){
+                                        $bx += $cellSz;
+                                        if(in_array($i, $roadCols)) $bx += $roadW;
+                                    }
+                                    $bx += $cellSz / 2;
 
-                                        // 計算 row 像素
-                                        $by = 0;
-                                        for($i = 0; $i < $b->grid_y; $i++){
-                                            $by += $cellSz;
-                                            if(in_array($i, $roadRows)) $by += $roadW;
-                                        }
-                                        $by += $cellSz * 0.85;
+                                    $by = 0;
+                                    for($i = 0; $i < $b->grid_y; $i++){
+                                        $by += $cellSz;
+                                        if(in_array($i, $roadRows)) $by += $roadW;
+                                    }
+                                    $by += $cellSz * 0.5;
 
-                                        $px = $bx / $mapW * 100;
-                                        $py = $by / $mapH * 100;
-                                    @endphp
-                                    <div class="snap-building" style="left:{{ $px }}%;top:{{ $py }}%;">
-                                        <img src="/svg/{{ $b->svg_file }}" alt="{{ $b->name }}">
-                                        <div class="snap-label">{{ $b->name }}</div>
+                                    // 設定水平和垂直偏移量，負值表示向左/向上移動
+                                    // 這裡使用 -$cellSz*0.5 作為範例，將所有建築往左上移動半個格子
+                                    $offsetX = -($cellSz * 0.7);
+                                    $offsetY = -($cellSz * 0.5);
+
+                                    $bx += $offsetX; // 套用水平偏移
+                                    $by += $offsetY; // 套用垂直偏移
+
+                                    $px = round($bx / $mapW * 100, 2);
+                                    $py = round($by / $mapH * 100, 2);
+                                @endphp
+                                    <div
+                                        style="position:absolute;left:{{ $px }}%;top:{{ $py }}%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;">
+                                        <img src="/svg/{{ $b->svg_file }}"
+                                            style="width:clamp(24px,3.5vw,48px);height:clamp(24px,3.5vw,48px);object-fit:contain;image-rendering:pixelated;"
+                                            alt="{{ $b->name }}">
+                                        <div
+                                            style="font-size:clamp(7px,0.7vw,10px);color:#3D2B1F;background:rgba(245,237,214,0.88);padding:1px 5px;border-radius:99px;margin-top:2px;white-space:nowrap;">
+                                            {{ $b->name }}</div>
                                     </div>
                                 @endforeach
-                                <div class="snap-building" style="left:{{ $px }}%;top:{{ $py }}%;">
-                                    <img src="/svg/{{ $b->svg_file }}" alt="{{ $b->name }}">
-                                    <div class="snap-label">{{ $b->name }}</div>
-                                </div>
-                            @endforeach
+                            </div>
                         </div>
                     </div>
                 @endif
