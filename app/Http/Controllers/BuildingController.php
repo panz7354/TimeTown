@@ -32,13 +32,12 @@ class BuildingController extends Controller
     // 新增任務時確保有基礎房子，若最新一棟已達 MAX 且不足 3 棟，新增下一棟
     public static function ensureBaseBuilding(int $userId, string $taskType): void
     {
-        // 取得目前這個類型的所有棟，按 slot 排序
         $buildings = Building::where('user_id', $userId)
-                             ->where('type', $taskType)
-                             ->orderBy('slot')
-                             ->get();
+                            ->where('type', $taskType)
+                            ->orderBy('slot')
+                            ->get();
 
-        // 完全沒有 → 建第 0 棟（slot=0）
+        // 完全沒有 → 建第 0 棟
         if ($buildings->isEmpty()) {
             Building::create([
                 'user_id'         => $userId,
@@ -54,25 +53,27 @@ class BuildingController extends Controller
             return;
         }
 
-        // 最新一棟（slot 最大的）
-        $last = $buildings->last();
+        // 已有 3 棟 → 不動
+        if ($buildings->count() >= 3) return;
 
-        // 最新一棟已到 MAX（level 3）且目前棟數 < 3 → 新增下一棟
-        if ($last->level >= 3 && $buildings->count() < 3) {
-            $nextSlot = $buildings->count();
-            Building::create([
-                'user_id'         => $userId,
-                'type'            => $taskType,
-                'slot'            => $nextSlot,
-                'level'           => 0,
-                'name'            => self::UPGRADE_MAP[$taskType][0],
-                'svg_file'        => self::SVG_MAP[$taskType][0],
-                'completed_count' => 0,
-                'grid_x'          => null,
-                'grid_y'          => null,
-            ]);
-        }
-        // 其他情況（最新棟還沒 MAX，或已有 3 棟）→ 不動
+        // 最新一棟（slot 最大）
+        $last = $buildings->sortByDesc('slot')->first();
+
+        // 最新一棟還沒到 MAX → 不新增
+        if ($last->level < 3) return;
+
+        // 最新一棟已 MAX → 新增下一棟
+        Building::create([
+            'user_id'         => $userId,
+            'type'            => $taskType,
+            'slot'            => $buildings->count(),  // 0→1→2
+            'level'           => 0,
+            'name'            => self::UPGRADE_MAP[$taskType][0],
+            'svg_file'        => self::SVG_MAP[$taskType][0],
+            'completed_count' => 0,
+            'grid_x'          => null,
+            'grid_y'          => null,
+        ]);
     }
 
     // 完成任務時，升級「最新一棟尚未 MAX 的建築」

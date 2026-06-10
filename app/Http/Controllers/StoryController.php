@@ -102,6 +102,17 @@ class StoryController extends Controller
             ? "上週故事的結尾是：「{$prevTail}」，請讓這週的故事與上週有所連結。"
             : "這是主人翁的第一週故事。";
 
+        // 計算任務實際分布的日期
+        $taskDates = $tasks->where('status','completed')
+            ->pluck('date')
+            ->unique()
+            ->sort()
+            ->values();
+        $dateCount = $taskDates->count();
+        $dateDesc  = $dateCount === 1
+            ? "這週所有任務都發生在同一天（{$taskDates->first()}），請不要把任務分配到不同天"
+            : "這週任務分布在 {$dateCount} 天：" . $taskDates->join('、');
+
         $prompt = <<<EOT
 你是一位擅長寫溫馨生活故事的作家。請根據以下「實際任務清單」，為主人翁「{$user->name}」寫一篇本週生活故事。
 
@@ -122,6 +133,7 @@ class StoryController extends Controller
 6. 風格溫馨、生活化
 7. 未完成的任務只需暗示「還有些事情尚未完成」即可，不要點名
 8. 故事最後一段請以「【本週結語】」開頭，這段將作為下週故事的連結素材
+9. 時間分配規則：{$dateDesc}。不可以自行捏造任務發生的星期幾或時間點
 
 請直接輸出故事內容，不需要加標題。
 EOT;
