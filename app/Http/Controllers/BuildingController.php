@@ -37,12 +37,39 @@ class BuildingController extends Controller
                             ->orderBy('slot')
                             ->get();
 
-        // 完全沒有 → 建第 0 棟
         if ($buildings->isEmpty()) {
+            try {
+                Building::create([
+                    'user_id'         => $userId,
+                    'type'            => $taskType,
+                    'slot'            => 0,
+                    'level'           => 0,
+                    'name'            => self::UPGRADE_MAP[$taskType][0],
+                    'svg_file'        => self::SVG_MAP[$taskType][0],
+                    'completed_count' => 0,
+                    'grid_x'          => null,
+                    'grid_y'          => null,
+                ]);
+            } catch (\Illuminate\Database\UniqueConstraintViolationException $e) {
+                // 已存在，略過
+            }
+            return;
+        }
+
+        if ($buildings->count() >= 3) return;
+
+        $last = $buildings->last(); // 已經 orderBy('slot') 所以 last() 就是最大 slot
+        \Log::info("ensureBaseBuilding: type={$taskType}, count={$buildings->count()}, last_level={$last->level}, last_slot={$last->slot}");
+
+        if ($last->level < 3) return;
+
+        $nextSlot = $last->slot + 1; // 用 slot+1 而不是 count()
+
+        try {
             Building::create([
                 'user_id'         => $userId,
                 'type'            => $taskType,
-                'slot'            => 0,
+                'slot'            => $nextSlot,
                 'level'           => 0,
                 'name'            => self::UPGRADE_MAP[$taskType][0],
                 'svg_file'        => self::SVG_MAP[$taskType][0],
@@ -50,30 +77,10 @@ class BuildingController extends Controller
                 'grid_x'          => null,
                 'grid_y'          => null,
             ]);
-            return;
+            \Log::info("ensureBaseBuilding: created slot={$nextSlot} for {$taskType}");
+        } catch (\Exception $e) {
+            \Log::error("ensureBaseBuilding create failed: " . $e->getMessage());
         }
-
-        // 已有 3 棟 → 不動
-        if ($buildings->count() >= 3) return;
-
-        // 最新一棟（slot 最大）
-        $last = $buildings->sortByDesc('slot')->first();
-
-        // 最新一棟還沒到 MAX → 不新增
-        if ($last->level < 3) return;
-
-        // 最新一棟已 MAX → 新增下一棟
-        Building::create([
-            'user_id'         => $userId,
-            'type'            => $taskType,
-            'slot'            => $buildings->count(),  // 0→1→2
-            'level'           => 0,
-            'name'            => self::UPGRADE_MAP[$taskType][0],
-            'svg_file'        => self::SVG_MAP[$taskType][0],
-            'completed_count' => 0,
-            'grid_x'          => null,
-            'grid_y'          => null,
-        ]);
     }
 
     // 完成任務時，升級「最新一棟尚未 MAX 的建築」

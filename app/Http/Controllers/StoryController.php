@@ -64,15 +64,28 @@ class StoryController extends Controller
         }
 
         // 已有故事就不重新生成
-        $existing = WeeklyStory::where('user_id', $userId)
-                               ->where('week', $week)
-                               ->where('year', $year)
-                               ->whereNotNull('story_text')
-                               ->first();
+        // $existing = WeeklyStory::where('user_id', $userId)
+        //                        ->where('week', $week)
+        //                        ->where('year', $year)
+        //                        ->whereNotNull('story_text')
+        //                        ->first();
 
-        if ($existing) {
-            return redirect()->route('stories.index', ['week' => $week, 'year' => $year])
-                             ->with('info', '這週的故事已經生成過了');
+        // if ($existing) {
+        //     return redirect()->route('stories.index', ['week' => $week, 'year' => $year])
+        //                      ->with('info', '這週的故事已經生成過了');
+        // }
+
+        // force=1 時強制重新生成，否則已有故事就跳過
+        if (!request('force')) {
+            $existing = WeeklyStory::where('user_id', $userId)
+                                ->where('week', $week)
+                                ->where('year', $year)
+                                ->whereNotNull('story_text')
+                                ->first();
+            if ($existing) {
+                return redirect()->route('stories.index', ['week' => $week, 'year' => $year])
+                                ->with('info', '這週的故事已經生成過了');
+            }
         }
 
         // 上週結尾

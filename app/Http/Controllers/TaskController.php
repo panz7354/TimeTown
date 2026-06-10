@@ -12,11 +12,19 @@ class TaskController extends Controller
     // 行事曆頁面
     public function index()
     {
-        $tasks = Task::where('user_id', Auth::id())
-                     ->orderBy('date')
-                     ->get();
+        $userId = Auth::id();
 
-        return view('calendar.index', compact('tasks'));
+        $pending = Task::where('user_id', $userId)
+                    ->where('status', 'pending')
+                    ->orderBy('date')
+                    ->get();
+
+        $completed = Task::where('user_id', $userId)
+                        ->where('status', 'completed')
+                        ->orderByDesc('completed_at')
+                        ->paginate(10, ['*'], 'page');
+
+        return view('calendar.index', compact('pending', 'completed'));
     }
 
     // 新增任務
@@ -64,6 +72,8 @@ class TaskController extends Controller
         ]);
 
         $building = BuildingController::upgradeAfterComplete(Auth::id(), $task->type);
+
+        BuildingController::ensureBaseBuilding(Auth::id(), $task->type);
 
         $msg = $building->wasChanged()
             ? "任務完成！{$task->type} 升級為【{$building->name}】🎉"

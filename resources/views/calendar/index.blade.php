@@ -330,6 +330,13 @@
             color: #3D2B1F;
             border-color: #C9A84C;
         }
+
+        .page-btn{
+            background:#FDF7EC;border:1.5px solid #D4C089;border-radius:8px;
+            padding:6px 14px;font-size:13px;color:#8B6914;text-decoration:none;cursor:pointer;
+        }
+        .page-btn.disabled{opacity:0.4;cursor:default;pointer-events:none;}
+        .page-btn:not(.disabled):hover{background:#F5EDD6;}
     </style>
 </head>
 
@@ -396,10 +403,8 @@
                 '休息' => ['dot' => '#C9A84C', 'bg' => '#FAEEDA', 'text' => '#854F0B'],
                 '興趣創作' => ['dot' => '#EFB0A4', 'bg' => '#FBEAF0', 'text' => '#993556'],
             ];
-
-            $pending = $tasks->where('status', 'pending')->sortByDesc('date');
-            $completed = $tasks->where('status', 'completed')->sortByDesc('completed_at')->take(20);
-          @endphp
+            $pending = $pending->sortByDesc('date');
+        @endphp
 
         {{-- ══ 待完成任務 ══ --}}
         <div class="section-header">
@@ -443,7 +448,7 @@
         {{-- ══ 最近完成 ══ --}}
         @if($completed->isNotEmpty())
             <div class="section-header">
-                <span class="section-label">最近完成（最新 {{ $completed->count() }} 筆）</span>
+                <span class="section-label">已完成（{{ $completed->total() }} 筆）</span>
                 <div class="section-line"></div>
             </div>
             <div class="task-list">
@@ -464,6 +469,23 @@
                         <div class="done-mark">✓ 完成</div>
                     </div>
                 @endforeach
+                @if($completed->hasPages())
+                    <div style="display:flex;justify-content:center;gap:8px;margin-top:16px;align-items:center;">
+                        @if($completed->onFirstPage())
+                            <span class="page-btn disabled">←</span>
+                        @else
+                            <a href="{{ $completed->previousPageUrl() }}" class="page-btn">←</a>
+                        @endif
+                        <span style="font-size:13px;color:#9A7230;padding:6px 12px;">
+                            第 {{ $completed->currentPage() }} 頁，共 {{ $completed->lastPage() }} 頁
+                        </span>
+                        @if($completed->hasMorePages())
+                            <a href="{{ $completed->nextPageUrl() }}" class="page-btn">→</a>
+                        @else
+                            <span class="page-btn disabled">→</span>
+                        @endif
+                    </div>
+                @endif
             </div>
         @endif
 
@@ -472,7 +494,7 @@
     {{-- 底部導覽 --}}
     <nav class="nav">
         <a href="{{ url('/') }}" class="nav-btn">城鎮</a>
-        <a href="{{ url('/calendar') }}" class="nav-btn">行事曆</a>
+        <a href="{{ url('/calendar') }}" class="nav-btn active">行事曆</a>
         <a href="{{ url('/review') }}" class="nav-btn">回顧</a>
         <a href="{{ url('/stories') }}" class="nav-btn">故事</a>
     </nav>

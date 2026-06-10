@@ -392,7 +392,7 @@
             background: rgba(61, 43, 31, 0.88);
             color: #F5EDD6;
             border: 1px solid rgba(201, 168, 76, 0.5);
-            padding: 8px 18px;
+            padding: 8px 20px;
             border-radius: 99px;
             font-family: 'Noto Serif TC', serif;
             font-size: 13px;
@@ -571,10 +571,10 @@
             </div>
         </div>
         <nav class="nav">
-            <a href="{{ url('/') }}" class="nav-btn active">城鎮</a>
+            <a href="{{ url('/') }}"         class="nav-btn active">城鎮</a>
             <a href="{{ url('/calendar') }}" class="nav-btn">行事曆</a>
-            <a href="{{ url('/review') }}" class="nav-btn">回顧</a>
-            <a href="{{ url('/stories') }}" class="nav-btn">故事</a>
+            <a href="{{ url('/review') }}"   class="nav-btn">回顧</a>
+            <a href="{{ url('/stories') }}"  class="nav-btn">故事</a>
         </nav>
         <div class="toast" id="toast"></div>
     </div>
