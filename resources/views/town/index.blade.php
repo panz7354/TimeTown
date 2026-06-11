@@ -410,6 +410,18 @@
             color: #3D2B1F;
             border-color: #C9A84C;
         }
+
+        .logout-form {
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .logout-btn {
+            border: 1px solid rgba(201, 168, 76, 0.5);
+            appearance: none;
+            -webkit-appearance: none;
+        }
     </style>
 </head>
 
@@ -571,11 +583,18 @@
             </div>
         </div>
         <nav class="nav">
-            <a href="{{ url('/') }}"         class="nav-btn active">城鎮</a>
+            <a href="{{ url('/') }}" class="nav-btn active">城鎮</a>
             <a href="{{ url('/calendar') }}" class="nav-btn">行事曆</a>
-            <a href="{{ url('/review') }}"   class="nav-btn">回顧</a>
-            <a href="{{ url('/stories') }}"  class="nav-btn">故事</a>
+            <a href="{{ url('/review') }}" class="nav-btn">回顧</a>
+            <a href="{{ url('/stories') }}" class="nav-btn">故事</a>
             <a href="{{ url('/guide') }}" class="nav-btn">圖鑑</a>
+
+            <form method="POST" action="{{ route('logout') }}" class="logout-form">
+                @csrf
+                <button type="submit" class="nav-btn logout-btn">
+                    登出
+                </button>
+            </form>
         </nav>
         <div class="toast" id="toast"></div>
     </div>
