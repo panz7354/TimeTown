@@ -167,6 +167,10 @@ EOT;
 
             $storyText = $response->json('choices.0.message.content');
 
+            \Log::info('Groq response status: ' . $response->status());
+            \Log::info('Story text length: ' . strlen($storyText ?? ''));
+            \Log::info('Story text preview: ' . substr($storyText ?? '', 0, 100));
+
             // 擷取【結尾】段落
             $tail = null;
             if (preg_match('/【本週結語】(.+)$/s', $storyText, $matches)) {

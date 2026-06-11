@@ -538,6 +538,7 @@
         <a href="{{ url('/calendar') }}" class="nav-btn">行事曆</a>
         <a href="{{ url('/review') }}" class="nav-btn active">回顧</a>
         <a href="{{ url('/stories') }}" class="nav-btn">故事</a>
+        <a href="{{ url('/guide') }}" class="nav-btn">圖鑑</a>
     </nav>
 
     {{-- Chart.js --}}

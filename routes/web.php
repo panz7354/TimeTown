@@ -6,6 +6,7 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\StoryController;
+use App\Http\Controllers\GuideController;
 
 // 登入/註冊（不需要驗證）
 Route::get('/login',    [AuthController::class, 'showLogin'])->name('login');
@@ -24,4 +25,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/review',  [ReviewController::class, 'index']);
     Route::get('/stories',          [StoryController::class, 'index'])->name('stories.index');
     Route::post('/stories/generate',[StoryController::class, 'generate'])->name('stories.generate');
+    Route::get('/guide', [GuideController::class, 'index']);
 });
